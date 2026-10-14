@@ -1,4 +1,4 @@
-To-Do API
+# To-Do API
 
 A RESTful API for managing tasks built with Bun, Hono, and SQLite. The API provides basic CRUD operations, request validation using Zod, and interactive API documentation with Swagger/OpenAPI.
 Prerequisites
@@ -10,38 +10,35 @@ Before running the application, make sure you have the following installed:
 
 Verify Bun installation:
 
-bun --version
+    bun --version
 
 Installation
 
 Clone the repository:
 
-git clone <repository-url>
-cd todo-api
+    git clone https://github.com/elle184/gnp-todo-list-app.git
+    
+    cd todo-list-app
 
 Install dependencies:
 
-bun install
+    bun install
 
 Starting the Application
 
 Run the API server:
 
-bun run src/index.ts
-
-Or run it in watch mode during development:
-
-bun --watch src/index.ts
+    bun run dev
 
 Once started, the API will be available at:
 
-http://localhost:3000
+http://localhost:3000/api
 
 API Documentation
 
 Swagger UI:
 
-http://localhost:3000/doc
+http://localhost:3000/docs
 
 OpenAPI Specification:
 
@@ -56,101 +53,104 @@ On startup, the application automatically creates:
     database.sqlite
     tasks table (if it does not exist)
 
-Available Endpoints
-Method	Endpoint	Description
-POST	/tasks	Create a task
-GET	/tasks	Get all tasks
-GET	/tasks/:id	Get a task by ID
-PATCH	/tasks/:id	Update a task
-DELETE	/tasks/:id	Delete a task
-Testing the API
+## Available Endpoints
+
+| Method |	Endpoint |	Description |
+|------- | --------- | ------------ |
+| POST	 | /tasks	 | Create a task |
+| GET	 | /tasks	 | Get all tasks |
+| GET	 | /tasks/:id |	Get a task by ID | 
+| PATCH	 | /tasks/:id |	Update a task |
+| DELETE |	/tasks/:id |	Delete a task |
+
+## Testing the API
 1. Create a Task
 
-curl -X POST http://localhost:3000/tasks \
--H "Content-Type: application/json" \
--d '{
-  "title":"Learn Hono",
-  "description":"Build a REST API"
-}'
+        curl -X POST http://localhost:3000/tasks \
+        -H "Content-Type: application/json" \
+        -d '{
+        "title":"Learn Hono",
+        "description":"Build a REST API"
+        }'
 
 Expected response:
 
-{
-  "id": 1,
-  "title": "Learn Hono",
-  "description": "Build a REST API",
-  "completed": false
-}
+        {
+        "id": 1,
+        "title": "Learn Hono",
+        "description": "Build a REST API",
+        "completed": false
+        }
 
 2. Get All Tasks
 
-curl http://localhost:3000/tasks
+        curl http://localhost:3000/tasks
 
 Expected response:
 
-[
-  {
+    [
+    {
+        "id": 1,
+        "title": "Learn Hono",
+        "description": "Build a REST API",
+        "completed": false
+    }
+    ]
+
+3. Get a Task by ID
+
+        curl http://localhost:3000/tasks/1
+
+Expected response:
+
+    {
     "id": 1,
     "title": "Learn Hono",
     "description": "Build a REST API",
     "completed": false
-  }
-]
-
-3. Get a Task by ID
-
-curl http://localhost:3000/tasks/1
-
-Expected response:
-
-{
-  "id": 1,
-  "title": "Learn Hono",
-  "description": "Build a REST API",
-  "completed": false
-}
+    }
 
 4. Filter Tasks by Status
 
 Completed tasks:
 
-curl "http://localhost:3000/tasks?completed=true"
+        curl "http://localhost:3000/tasks?completed=true"
 
 Pending tasks:
 
-curl "http://localhost:3000/tasks?completed=false"
+        curl "http://localhost:3000/tasks?completed=false"
 
 5. Update a Task
 
 Mark as completed:
 
-curl -X PATCH http://localhost:3000/tasks/1 \
--H "Content-Type: application/json" \
--d '{
-  "completed": true
-}'
+    curl -X PATCH http://localhost:3000/tasks/1 \
+    -H "Content-Type: application/json" \
+    -d '{
+    "completed": true
+    }'
 
 Update title and description:
 
-curl -X PATCH http://localhost:3000/tasks/1 \
--H "Content-Type: application/json" \
--d '{
-  "title":"Master Hono",
-  "description":"Add OpenAPI documentation"
-}'
+    curl -X PATCH http://localhost:3000/tasks/1 \
+    -H "Content-Type: application/json" \
+    -d '{
+    "title":"Master Hono",
+    "description":"Add OpenAPI documentation"
+    }'
 
 Expected response:
 
-{
-  "id": 1,
-  "title": "Master Hono",
-  "description": "Add OpenAPI documentation",
-  "completed": true
-}
+    {
+    "id": 1,
+    "title": "Master Hono",
+    "description": "Add OpenAPI documentation",
+    "completed": true
+    }
 
 6. Delete a Task
 
-curl -X DELETE http://localhost:3000/tasks/1
+        curl -X DELETE http://localhost:3000/tasks/1
 
 Expected response:
 
@@ -162,63 +162,63 @@ The API validates incoming requests using Zod.
 
 Example of an invalid request:
 
-curl -X POST http://localhost:3000/tasks \
--H "Content-Type: application/json" \
--d '{
-  "title":"Hi"
-}'
+    curl -X POST http://localhost:3000/tasks \
+    -H "Content-Type: application/json" \
+    -d '{
+    "title":"Hi"
+    }'
 
 Expected response:
 
-{
-  "success": false,
-  "error": {
-    "issues": [
-      {
-        "message": "String must contain at least 3 character(s)"
-      }
-    ]
-  }
-}
+    {
+    "success": false,
+    "error": {
+        "issues": [
+        {
+            "message": "String must contain at least 3 character(s)"
+        }
+        ]
+    }
+    }
 
 Quick End-to-End Test
 
 Execute the following commands in order:
 
-# Create a task
-curl -X POST http://localhost:3000/tasks \
--H "Content-Type: application/json" \
--d '{"title":"Task 1","description":"First task"}'
+## Create a task
+    curl -X POST http://localhost:3000/tasks \
+    -H "Content-Type: application/json" \
+    -d '{"title":"Task 1","description":"First task"}'
 
-# Get all tasks
-curl http://localhost:3000/tasks
+## Get all tasks
+    curl http://localhost:3000/tasks
 
-# Get task by ID
-curl http://localhost:3000/tasks/1
+## Get task by ID
+    curl http://localhost:3000/tasks/1
 
-# Update task
-curl -X PATCH http://localhost:3000/tasks/1 \
--H "Content-Type: application/json" \
--d '{"completed":true}'
+## Update task
+    curl -X PATCH http://localhost:3000/tasks/1 \
+    -H "Content-Type: application/json" \
+    -d '{"completed":true}'
 
 # Get completed tasks
-curl "http://localhost:3000/tasks?completed=true"
+    curl "http://localhost:3000/tasks?completed=true"
 
 # Delete task
-curl -X DELETE http://localhost:3000/tasks/1
+    curl -X DELETE http://localhost:3000/tasks/1
 
 Project Structure
 
-src/
-├── controllers/
-├── services/
-├── repositories/
-├── routes/
-├── schemas/
-├── db/
-│   ├── database.ts
-│   └── migrations.ts
-└── index.ts
+    src/
+    ├── controllers/
+    ├── services/
+    ├── repositories/
+    ├── routes/
+    ├── schemas/
+    ├── db/
+    │   ├── database.ts
+    │   └── migrations.ts
+    └── index.ts
 
 Future Improvements
 
